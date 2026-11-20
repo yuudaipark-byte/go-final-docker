@@ -37,6 +37,9 @@ jobs:
       - name: Download dependencies
         run: go mod download
 
+      - name: Update Go dependencies
+        run: go mod tidy
+
       - name: Check code
         run: go vet ./...
 
