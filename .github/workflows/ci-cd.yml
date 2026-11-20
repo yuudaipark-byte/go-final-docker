@@ -8,6 +8,7 @@ on:
     branches:
       - main
       - feature/docker
+      - feature/container-test
     tags:
       - 'v*'
 
@@ -48,6 +49,14 @@ jobs:
 
       - name: Test Docker build
         run: docker build -t parcel-tracker:test .
+
+      - name: Test Docker container
+        run: |
+          docker run -d --name parcel-test parcel-tracker:test
+          sleep 5
+          docker logs parcel-test
+          docker inspect -f '{{.State.Running}}' parcel-test | grep true
+          docker rm -f parcel-test
 
   publish:
     name: Build and publish Docker image
