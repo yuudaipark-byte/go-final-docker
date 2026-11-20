@@ -1,12 +1,21 @@
-FROM golang:1.23-bookworm AS builder
-WORKDIR /app
-COPY go.mod ./
-RUN go mod download
-COPY main.go parcel.go ./
-RUN CGO_ENABLED=0 GOOS=linux go build -o /parcel-tracker .
 
-FROM alpine:3.20
+FROM golang:1.23-bookworm AS builder
+
 WORKDIR /app
-COPY --from=builder /parcel-tracker /app/parcel-tracker
-COPY tracker.db /app/tracker.db
-CMD ["/app/parcel-tracker"]
+
+COPY . .
+
+RUN go mod tidy
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o server .
+
+FROM debian:bookworm-slim
+
+WORKDIR /app
+
+COPY --from=builder /app/server ./server
+COPY --from=builder /app/tracker.db ./tracker.db
+
+EXPOSE 3000
+
+CMD ["./server"]
