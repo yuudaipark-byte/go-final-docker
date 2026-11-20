@@ -46,6 +46,9 @@ jobs:
       - name: Run tests
         run: go test -v ./...
 
+      - name: Test Docker build
+        run: docker build -t parcel-tracker:test .
+
   publish:
     name: Build and publish Docker image
     needs: test
