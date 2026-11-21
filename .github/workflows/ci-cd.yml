@@ -26,6 +26,9 @@ jobs:
           go-version-file: go.mod
           cache: true
 
+      - name: Download dependencies
+        run: go mod download
+
       - name: Check code
         run: go vet ./...
 
