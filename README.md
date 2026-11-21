@@ -43,4 +43,5 @@ env:
 # Использую GitHub Container Registry, т.к. Docker Hub недоступен
 ```
 
+///
 
